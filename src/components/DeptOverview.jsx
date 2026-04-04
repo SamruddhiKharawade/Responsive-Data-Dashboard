@@ -1,21 +1,24 @@
-import { students, DEPARTMENTS } from '../data/mockStudents'
+import { DEPARTMENTS } from '../data/mockStudents'
 
 const COLORS = ['#4a6fa5', '#3a7d5c', '#a0631a', '#b03a2a', '#5a6ea0']
 
-export default function DeptOverview() {
-  const max = Math.max(...DEPARTMENTS.map(d => students.filter(s => s.dept === d).length))
+export default function DeptOverview({ data }) {
+  const counts = DEPARTMENTS.map(d => data.filter(s => s.dept === d).length)
+  const max    = Math.max(...counts, 1)
 
   return (
     <div className="card">
       <div className="card-hdr">
         <div>
           <div className="card-title">Department Overview</div>
-          <div className="card-sub">Students and average GPA per department</div>
+          <div className="card-sub">Students and average GPA in current filter</div>
         </div>
       </div>
       {DEPARTMENTS.map((d, i) => {
-        const cnt = students.filter(s => s.dept === d).length
-        const avg = (students.filter(s => s.dept === d).reduce((a, b) => a + b.gpa, 0) / cnt || 0).toFixed(1)
+        const cnt = counts[i]
+        const avg = cnt
+          ? (data.filter(s => s.dept === d).reduce((a, b) => a + b.gpa, 0) / cnt).toFixed(1)
+          : '—'
         return (
           <div key={d} className="dept-item">
             <div className="dept-lbl">
