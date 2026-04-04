@@ -3,37 +3,39 @@ import { useState } from 'react'
 const PER_PAGE = 8
 
 function GradeTag({ grade }) {
-  const map = {
-    A: { bg: '#e8f5ee', color: '#1e7a4e' },
-    B: { bg: '#eef2fb', color: '#2a56a4' },
-    C: { bg: '#fdf3e3', color: '#9a5e0a' },
-    D: { bg: '#fdf0ee', color: '#a83228' },
-  }
-  const s = map[grade] || map.D
   return (
-    <span style={{
-      display: 'inline-flex', padding: '2px 9px', borderRadius: 20,
-      fontSize: 11.5, fontWeight: 600, background: s.bg, color: s.color,
-    }}>{grade}</span>
+    <span className={`grade-tag g${grade}`}>{grade}</span>
   )
 }
 
 function AttBar({ value }) {
-  const color = value >= 75 ? '#2d8c5e' : '#c0392b'
+  const color = value >= 75 ? '#3a7d5c' : '#b03a2a'
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-      <div style={{ width: 56, height: 4, background: '#eeece8', borderRadius: 4, overflow: 'hidden' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+      <div style={{ width: 52, height: 4, background: '#eeece8', borderRadius: 4, overflow: 'hidden' }}>
         <div style={{ width: `${value}%`, height: '100%', background: color, borderRadius: 4 }}/>
       </div>
-      <span style={{ fontSize: 12, color: 'var(--muted)' }}>{value}%</span>
+      <span style={{ fontSize: 11.5, color: 'var(--muted)' }}>{value}%</span>
     </div>
+  )
+}
+
+function PageBtn({ label, onClick, active, disabled }) {
+  return (
+    <button
+      className={`pg-btn ${active ? 'pa' : ''}`}
+      onClick={onClick}
+      disabled={disabled}
+    >
+      {label}
+    </button>
   )
 }
 
 export default function StudentTable({ data }) {
   const [sortKey, setSortKey] = useState('id')
   const [sortDir, setSortDir] = useState('asc')
-  const [page, setPage]       = useState(1)
+  const [page,    setPage]    = useState(1)
 
   const handleSort = key => {
     if (sortKey === key) setSortDir(d => d === 'asc' ? 'desc' : 'asc')
@@ -51,69 +53,68 @@ export default function StudentTable({ data }) {
   const safePage   = Math.min(page, totalPages)
   const paged      = sorted.slice((safePage - 1) * PER_PAGE, safePage * PER_PAGE)
 
-  const Th = ({ k, label }) => {
-    const active = sortKey === k
-    return (
-      <th
-        onClick={() => handleSort(k)}
-        style={{
-          textAlign: 'left', padding: '9px 14px', fontSize: 11.5, fontWeight: 600,
-          color: active ? 'var(--text)' : 'var(--muted)', letterSpacing: '0.3px',
-          cursor: 'pointer', whiteSpace: 'nowrap', userSelect: 'none',
-          background: 'var(--surface)', borderBottom: '1px solid var(--border)',
-        }}
-      >
-        {label} {active ? (sortDir === 'asc' ? '↑' : '↓') : ''}
-      </th>
-    )
-  }
+  const Th = ({ k, label }) => (
+    <th onClick={() => handleSort(k)}>
+      {label}{sortKey === k ? (sortDir === 'asc' ? ' ↑' : ' ↓') : ''}
+    </th>
+  )
 
   return (
-    <div className="card" style={{ padding: 0 }}>
-      {/* header */}
-      <div style={{
-        padding: '18px 20px 14px', display: 'flex', alignItems: 'center',
-        justifyContent: 'space-between', borderBottom: '1px solid var(--border)',
-      }}>
+    <div className="table-card">
+      <div className="tbl-hdr">
         <div>
           <div className="card-title">Student Records</div>
-          <div className="card-sub">Showing {data.length} student{data.length !== 1 ? 's' : ''}</div>
+          <div className="card-sub">{data.length} students</div>
         </div>
+        <select
+          onChange={e => {
+            const [k, d] = e.target.value.split('-')
+            setSortKey(k); setSortDir(d); setPage(1)
+          }}
+          style={{
+            padding: '4px 10px', borderRadius: 8,
+            border: '1px solid var(--border)',
+            background: 'var(--white)',
+            fontFamily: 'var(--font)', fontSize: 11.5,
+            color: 'var(--text)', outline: 'none', cursor: 'pointer',
+          }}
+        >
+          <option value="id-asc">Sort: ID ↑</option>
+          <option value="name-asc">Name A–Z</option>
+          <option value="gpa-desc">GPA ↓</option>
+          <option value="att-desc">Attendance ↓</option>
+        </select>
       </div>
 
-      {/* table */}
       <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <table>
           <thead>
             <tr>
-              <Th k="id"         label="ID"         />
-              <Th k="name"       label="Name"       />
-              <Th k="dept"       label="Department" />
-              <Th k="sem"        label="Sem"        />
-              <Th k="gpa"        label="GPA"        />
-              <Th k="att"        label="Attendance" />
-              <Th k="grade"      label="Grade"      />
-              <Th k="status"     label="Status"     />
+              <Th k="id"     label="ID"         />
+              <Th k="name"   label="Name"       />
+              <Th k="dept"   label="Department" />
+              <Th k="sem"    label="Sem"        />
+              <Th k="gpa"    label="GPA"        />
+              <Th k="att"    label="Attendance" />
+              <Th k="grade"  label="Grade"      />
+              <Th k="status" label="Status"     />
             </tr>
           </thead>
           <tbody>
             {paged.map(s => (
-              <tr key={s.id} style={{ borderBottom: '1px solid var(--border)' }}
-                onMouseEnter={e => e.currentTarget.style.background = '#faf9f7'}
-                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-              >
-                <td style={{ padding: '10px 14px', fontSize: 12, color: 'var(--muted)' }}>{s.id}</td>
-                <td style={{ padding: '10px 14px', fontWeight: 500 }}>{s.name}</td>
-                <td style={{ padding: '10px 14px', fontSize: 12.5, color: 'var(--muted)' }}>{s.dept}</td>
-                <td style={{ padding: '10px 14px', textAlign: 'center' }}>{s.sem}</td>
-                <td style={{ padding: '10px 14px', fontWeight: 600, fontSize: 13.5 }}>{s.gpa.toFixed(2)}</td>
-                <td style={{ padding: '10px 14px' }}><AttBar value={s.att}/></td>
-                <td style={{ padding: '10px 14px' }}><GradeTag grade={s.grade}/></td>
-                <td style={{ padding: '10px 14px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12.5 }}>
+              <tr key={s.id}>
+                <td style={{ color: 'var(--muted)', fontSize: 11.5 }}>{s.id}</td>
+                <td style={{ fontWeight: 500 }}>{s.name}</td>
+                <td style={{ color: 'var(--muted)', fontSize: 12 }}>{s.dept}</td>
+                <td style={{ textAlign: 'center' }}>{s.sem}</td>
+                <td style={{ fontWeight: 600 }}>{s.gpa.toFixed(2)}</td>
+                <td><AttBar value={s.att}/></td>
+                <td><GradeTag grade={s.grade}/></td>
+                <td>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12 }}>
                     <div style={{
                       width: 6, height: 6, borderRadius: '50%',
-                      background: s.status === 'Active' ? '#2d8c5e' : '#b0aca4',
+                      background: s.status === 'Active' ? '#3a7d5c' : '#b5b0a8',
                     }}/>
                     <span style={{ color: s.status === 'Active' ? 'var(--green)' : 'var(--muted)' }}>
                       {s.status}
@@ -126,38 +127,18 @@ export default function StudentTable({ data }) {
         </table>
       </div>
 
-      {/* pagination */}
-      <div style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '12px 16px', borderTop: '1px solid var(--border)',
-      }}>
-        <span style={{ fontSize: 12, color: 'var(--muted)' }}>
+      <div className="pg">
+        <span style={{ fontSize: 11.5, color: 'var(--muted)' }}>
           Page {safePage} of {totalPages}
         </span>
         <div style={{ display: 'flex', gap: 4 }}>
-          <PageBtn label="←" onClick={() => setPage(p => Math.max(1, p-1))} disabled={safePage === 1}/>
+          <PageBtn label="←" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={safePage === 1}/>
           {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map(p => (
             <PageBtn key={p} label={p} onClick={() => setPage(p)} active={p === safePage}/>
           ))}
-          <PageBtn label="→" onClick={() => setPage(p => Math.min(totalPages, p+1))} disabled={safePage === totalPages}/>
+          <PageBtn label="→" onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={safePage === totalPages}/>
         </div>
       </div>
     </div>
-  )
-}
-
-function PageBtn({ label, onClick, active, disabled }) {
-  return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      style={{
-        padding: '4px 10px', borderRadius: 7, fontSize: 12, cursor: disabled ? 'not-allowed' : 'pointer',
-        fontFamily: 'var(--font)', border: '1px solid var(--border)',
-        background: active ? 'var(--text)' : 'var(--white)',
-        color: active ? 'white' : disabled ? 'var(--muted2)' : 'var(--muted)',
-        opacity: disabled ? 0.4 : 1,
-      }}
-    >{label}</button>
   )
 }
