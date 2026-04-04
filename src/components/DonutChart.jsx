@@ -1,15 +1,14 @@
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 
-const GRADES  = ['A', 'B', 'C', 'D']
-const COLORS  = ['#2d8c5e', '#3b6fd4', '#b06a10', '#c0392b']
-const BG      = ['#e8f5ee',  '#eef2fb',  '#fdf3e3',  '#fdf0ee']
+const GRADE_COLORS = ['#6aab8e', '#7a9fc4', '#d4a96a', '#c97a72']
 
-const CustomTooltip = ({ active, payload }) => {
+function CustomTooltip({ active, payload }) {
   if (!active || !payload?.length) return null
   return (
     <div style={{
-      background: 'var(--white)', border: '1px solid var(--border)',
-      borderRadius: 8, padding: '8px 12px', fontSize: 12, fontFamily: 'var(--font)',
+      background: 'white', border: '1px solid #e2ded6',
+      borderRadius: 8, padding: '8px 12px',
+      fontSize: 12, fontFamily: 'Instrument Sans, sans-serif',
     }}>
       <span style={{ fontWeight: 600 }}>{payload[0].name}</span>: {payload[0].value} students
     </div>
@@ -17,35 +16,34 @@ const CustomTooltip = ({ active, payload }) => {
 }
 
 export default function DonutChart({ data }) {
-  const chartData = GRADES.map((g, i) => ({
-    name  : `Grade ${g}`,
-    value : data.filter(s => s.grade === g).length,
-    color : COLORS[i],
+  const chartData = ['A', 'B', 'C', 'D'].map((g, i) => ({
+    name : `Grade ${g}`,
+    value: data.filter(s => s.grade === g).length,
+    color: GRADE_COLORS[i],
   }))
 
   return (
     <div className="card">
-      <div className="card-header">
+      <div className="card-hdr">
         <div>
           <div className="card-title">Grade Distribution</div>
           <div className="card-sub">Breakdown by letter grade</div>
         </div>
       </div>
-      <ResponsiveContainer width="100%" height={180}>
+      <ResponsiveContainer width="100%" height={190}>
         <PieChart>
           <Pie
-            data={chartData} cx="50%" cy="50%"
-            innerRadius={48} outerRadius={72}
+            data={chartData}
+            cx="50%" cy="45%"
+            innerRadius={46} outerRadius={72}
             paddingAngle={3} dataKey="value"
           >
-            {chartData.map((entry, i) => (
-              <Cell key={i} fill={entry.color} opacity={0.88}/>
-            ))}
+            {chartData.map((e, i) => <Cell key={i} fill={e.color}/>)}
           </Pie>
-          <Tooltip content={<CustomTooltip />}/>
+          <Tooltip content={<CustomTooltip/>}/>
           <Legend
-            iconType="circle" iconSize={8}
-            wrapperStyle={{ fontSize: 12, fontFamily: 'var(--font)' }}
+            iconType="circle" iconSize={7}
+            wrapperStyle={{ fontSize: 11.5, fontFamily: 'Instrument Sans, sans-serif' }}
           />
         </PieChart>
       </ResponsiveContainer>
