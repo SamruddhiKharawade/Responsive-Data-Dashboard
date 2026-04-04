@@ -101,7 +101,7 @@ export default function App() {
             <div>
               <h1 style={{ fontSize: 24, fontWeight: 600, letterSpacing: '-0.5px' }}>Student Analytics</h1>
               <p style={{ fontSize: 12, color: 'var(--muted)', marginTop: 2 }}>
-                VIVA Institute of Technology · Academic Year 2024–25
+                 · Academic Year 2024–25
               </p>
             </div>
             <div style={{ display: 'flex', gap: 8 }}>
@@ -175,10 +175,10 @@ export default function App() {
           <StudentTable data={filtered}/>
 
           {/* bottom row */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-            <DeptOverview/>
-            <TopPerformers/>
-          </div>
+<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+  <DeptOverview   data={filtered}/>
+  <TopPerformers  data={filtered}/>
+</div>
 
         </main>
       </div>
@@ -222,7 +222,7 @@ export default function App() {
             }}>AK</div>
             <div>
               <div style={{ fontWeight: 600, fontSize: 15 }}>Arjun Kumar</div>
-              <div style={{ fontSize: 12.5, color: 'var(--muted)' }}>Administrator · VIVA Institute</div>
+              <div style={{ fontSize: 12.5, color: 'var(--muted)' }}>Administrator </div>
             </div>
           </div>
           {[['Role', 'Admin'], ['Department', 'Computer Science'], ['Year', '2024–25'], ['Access', 'Full']].map(([k, v]) => (
