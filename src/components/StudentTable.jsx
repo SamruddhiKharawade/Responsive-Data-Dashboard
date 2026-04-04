@@ -32,7 +32,7 @@ function PageBtn({ label, onClick, active, disabled }) {
   )
 }
 
-export default function StudentTable({ data }) {
+export default function StudentTable({ data , onRowClick}) {
   const [sortKey, setSortKey] = useState('id')
   const [sortDir, setSortDir] = useState('asc')
   const [page,    setPage]    = useState(1)
@@ -102,7 +102,9 @@ export default function StudentTable({ data }) {
           </thead>
           <tbody>
             {paged.map(s => (
-              <tr key={s.id}>
+              <tr key={s.id}
+              onClick={() => onRowClick(s)}
+  style={{ cursor: 'pointer' }}>
                 <td style={{ color: 'var(--muted)', fontSize: 11.5 }}>{s.id}</td>
                 <td style={{ fontWeight: 500 }}>{s.name}</td>
                 <td style={{ color: 'var(--muted)', fontSize: 12 }}>{s.dept}</td>
