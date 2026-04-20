@@ -58,7 +58,6 @@ export default function StudentTable({ data , onRowClick}) {
       {label}{sortKey === k ? (sortDir === 'asc' ? ' ↑' : ' ↓') : ''}
     </th>
   )
-
   return (
     <div className="table-card">
       <div className="tbl-hdr">
@@ -143,4 +142,4 @@ export default function StudentTable({ data , onRowClick}) {
       </div>
     </div>
   )
-}
+};

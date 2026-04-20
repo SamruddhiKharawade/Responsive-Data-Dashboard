@@ -22,9 +22,9 @@ const CustomTooltip = ({ active, payload, label }) => {
   )
 }
 
-export default function BarChartCard({ students }) {
+export default function GradeChart({ data }) {
   const semData = SEMESTERS.map(s => {
-    const d = students.filter(x => x.sem === s)
+    const d = data.filter(x => x.sem === s)
     return {
       sem : `Sem ${s}`,
       'Avg GPA'   : d.length ? parseFloat((d.reduce((a,b)=>a+b.gpa,0)/d.length).toFixed(2)) : 0,
