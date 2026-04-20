@@ -1,3 +1,14 @@
+Responsive Data Dashboard
+
+problem Statement:Create a dashboard that displays dynamic data (mock/API) with filters, sorting, and responsive layouts across devices.
+
+<img width="1138" height="786" alt="image" src="https://github.com/user-attachments/assets/bdbc2661-cbb0-45d5-843b-1d6ab8a05ea1" />
+
+
+
+
+
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
